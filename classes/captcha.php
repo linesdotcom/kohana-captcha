@@ -440,7 +440,7 @@ abstract class Captcha
 			return '<img src="'.url::site('captcha/'.Captcha::$config['group']).'" width="'.Captcha::$config['width'].'" height="'.Captcha::$config['height'].'" alt="Captcha" class="captcha" />';
 
 		// Pick the correct output function
-		$function = 'image'.$this->image_type;
+		$function = 'image'.Captcha::$image_type;
 		$function($this->image);
 
 		// Free up resources
