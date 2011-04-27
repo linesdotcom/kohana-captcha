@@ -21,6 +21,18 @@ class Controller_Captcha extends Controller {
 	public $auto_render = FALSE;
 
 	/**
+	 * Send the correct HTTP header for output image
+	 *
+	 */
+	public function before()
+	{
+        	$this->response->headers('Content-Type','image/'.Captcha::$image_type);
+        	$this->response->headers('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        	$this->response->headers('Pragma','no-cache');
+       		$this->response->headers('Connection','close');
+	}
+
+	/**
 	 * Output the captcha challenge
 	 *
 	 * @param string $group Config group name
