@@ -26,12 +26,12 @@ abstract class Captcha
 	public static $config = array
 	(
 		'style'      	=> 'basic',
-		'width'      	=> 150,
+		'width'      	=> 100,
 		'height'     	=> 50,
 		'complexity' 	=> 4,
 		'background' 	=> '',
-		'fontpath'   	=> '',
-		'fonts'      	=> array(),
+		'fontpath'   	=> 'kohana-captcha/fonts/',
+		'fonts'      	=> array('DejaVuSerif.ttf'),
 		'promote'    	=> FALSE,
 	);
 
@@ -48,7 +48,7 @@ abstract class Captcha
 	/**
 	 * @var string Image type ("png", "gif" or "jpeg")
 	 */
-	protected $image_type = 'png';
+	public static $image_type = 'png';
 
 	/**
 	 * Singleton instance of Captcha.
@@ -60,12 +60,18 @@ abstract class Captcha
 	{
 		if ( ! isset(Captcha::$instance))
 		{
+			//Set default font path
+			Captcha::$config['fontpath'] = MODPATH.Captcha::$config['fontpath'];
+			
+			//avoid $group is NULL
+			$group = ($group)?$group:'default';
+			
 			// Load the configuration for this group
-			$config = Kohana::config('captcha')->get($group);
+			$config = Kohana::config('captcha')->get($group,Captcha::$config);	
 
 			// Set the captcha driver class name
 			$class = 'Captcha_'.ucfirst($config['style']);
-
+			
 			// Create a new captcha instance
 			Captcha::$instance = $captcha = new $class($group);
 
@@ -432,12 +438,6 @@ abstract class Captcha
 		// Output html element
 		if ($html === TRUE)
 			return '<img src="'.url::site('captcha/'.Captcha::$config['group']).'" width="'.Captcha::$config['width'].'" height="'.Captcha::$config['height'].'" alt="Captcha" class="captcha" />';
-
-		// Send the correct HTTP header
-        Request::current()->headers['Content-Type'] = 'image/'.$this->image_type;
-        Request::current()->headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0';
-        Request::current()->headers['Pragma'] = 'no-cache';
-        Request::current()->headers['Connection'] = 'close';
 
 		// Pick the correct output function
 		$function = 'image'.$this->image_type;
