@@ -24,7 +24,7 @@ return array(
 		'height'     	=> 50,
 		'complexity' 	=> 4,
 		'background' 	=> '',
-		'fontpath'   	=> MODPATH.'captcha/fonts/',
+		'fontpath'   	=> MODPATH.'kohana-captcha/fonts/',
 		'fonts'      	=> array('DejaVuSerif.ttf'),
 		'promote'    	=> FALSE,
 	),
